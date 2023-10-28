@@ -3,7 +3,8 @@
   description = "Random packages";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default-linux";
     flake-utils = {
       url = "flake:flake-utils";
@@ -23,7 +24,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, nixpkgs-unstable, ... }:
   
   {
     nixosModules.default = { ... }: {
@@ -40,6 +41,7 @@
     let
 
       pkgs = nixpkgs.legacyPackages."${system}";
+      unstablePkgs = nixpkgs-unstable.legacyPackages."${system}";
 
     in
 
@@ -54,8 +56,8 @@
         piped-proxy-test = nixosTest (import ./piped-proxy/test.nix { inherit self; });
         piped-backend = callPackage ./piped-backend rec {
           src = inputs.piped-backend-src;
-          jdk = pkgs.jdk21_headless;
-          gradle = pkgs.gradle.override { java = jdk; };
+          jdk = unstablePkgs.jdk21_headless;
+          gradle = unstablePkgs.gradle.override { java = jdk; };
         };
         piped-backend-test = nixosTest (import ./piped-backend/test.nix { inherit self; });
         piped-frontend = callPackage ./piped-frontend {
