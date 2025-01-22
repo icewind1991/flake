@@ -18,7 +18,7 @@
       flake = false;
     };
     piped-backend-src = {
-      url = "github:TeamPiped/piped-backend";
+      url = "github:Atemu/piped-backend/bb7eadadc346211ad8cc2af8ecf90cab27eae4eb";
       flake = false;
     };
   };
